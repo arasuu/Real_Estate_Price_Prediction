@@ -62,7 +62,7 @@ recession = 1 if recession else 0
 property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 
 # Convert radio button selection to binary values
-bungalow = 1 if property_type == "Bungalow" else 0
+bunglow = 1 if property_type == "Bunglow" else 0
 condo = 1 if property_type == "Condo" else 0
 
 if hasattr(model, "feature_names_in_"):
@@ -86,7 +86,7 @@ features = pd.DataFrame({
     "popular": [popular],
     "recession": [recession],
     "property_age": [year_sold - year_built],  # Adjust column name if needed
-    "property_type_Bunglow": [bungalow],
+    "property_type_Bunglow": [bunglow],
     "property_type_Condo": [condo]
 })
 
