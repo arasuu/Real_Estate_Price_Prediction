@@ -52,8 +52,6 @@ lot_size = st.number_input("Lot Size (sqft)", min_value=0, value=15245)
 basement = st.toggle("Does it have a Basement?")
 popular = st.toggle("Is it in a Popular Location?")
 recession = st.toggle("Was it sold during a Recession?")
-bungalow = st.toggle("Is it a Bungalow?")
-condo = st.toggle("Is it a Condo?")
 
 # Convert toggles to binary values
 basement = 1 if basement else 0
