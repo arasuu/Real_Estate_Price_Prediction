@@ -59,8 +59,6 @@ condo = st.toggle("Is it a Condo?")
 basement = 1 if basement else 0
 popular = 1 if popular else 0
 recession = 1 if recession else 0
-#bungalow = 1 if bungalow else 0
-#condo = 1 if condo else 0
 
 property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 
