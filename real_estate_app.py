@@ -64,8 +64,28 @@ property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 bungalow = 1 if property_type == "Bungalow" else 0
 condo = 1 if property_type == "Condo" else 0
 
-# Convert inputs into a numpy array for model prediction
-features = np.array([[year_sold, property_tax, insurance, beds, baths, sqft, year_built, lot_size, basement, popular, recession, year_sold - year_built, bungalow, condo]])
+# Replace your features array with this:
+features = pd.DataFrame({
+    "year_sold": [year_sold],
+    "property_tax": [property_tax],
+    "insurance": [insurance],
+    "beds": [beds],
+    "baths": [baths],
+    "sqft": [sqft],
+    "year_built": [year_built],
+    "lot_size": [lot_size],
+    "basement": [basement],
+    "popular": [popular],
+    "recession": [recession],
+    "age_when_sold": [year_sold - year_built],  # Adjust column name if needed
+    "bungalow": [bungalow],
+    "condo": [condo]
+})
+
+# Reorder columns if model expects a specific order
+if hasattr(model, "feature_names_in_"):
+    features = features[model.feature_names_in_]
+
 
 # Predict button
 if st.button("🏠 Predict Price"):
