@@ -59,7 +59,7 @@ basement = 1 if basement else 0
 popular = 1 if popular else 0
 recession = 1 if recession else 0
 
-property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
+property_type = st.radio("Property Type", ["Bunglow", "Condo"], index=0)
 
 # Convert radio button selection to binary values
 bunglow = 1 if property_type == "Bunglow" else 0
