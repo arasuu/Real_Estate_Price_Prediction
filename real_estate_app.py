@@ -65,15 +65,9 @@ property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 bunglow = 1 if property_type == "Bunglow" else 0
 condo = 1 if property_type == "Condo" else 0
 
-if hasattr(model, "feature_names_in_"):
-        st.write("Model was trained with these features:", model.feature_names_in_)
-
-st.write("Model expects:", model.feature_names_in_)
-st.write("Your features:", features.columns.tolist())
 
 
-
-# Replace your features array with this:
+# features
 features = pd.DataFrame({
     "year_sold": [year_sold],
     "property_tax": [property_tax],
