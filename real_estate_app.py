@@ -1,73 +1,131 @@
 import streamlit as st
-import pickle
-import numpy as np
 import pandas as pd
+import pickle
+from streamlit_extras.colored_header import colored_header
+from streamlit_extras.stylable_container import stylable_container
 
-# Load the trained model
-with open("RE_Model.pkl", "rb") as file:
-    model = pickle.load(file)
+# --- Load Model ---
+@st.cache_resource
+def load_model():
+    with open("RE_Model.pkl", "rb") as file:
+        return pickle.load(file)
+model = load_model()
 
-# Set page configuration with a real estate theme
-st.set_page_config(page_title="🏡 Real Estate Price Prediction", layout="centered")
-
-# Custom CSS for styling
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #f5f7fa;
-    }
-    .main {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    }
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-size: 18px;
-        border-radius: 8px;
-        padding: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
+# --- Page Config ---
+st.set_page_config(
+    page_title="🏡 LuxeEstimate | AI Property Valuator",
+    page_icon="🏡",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Title
-st.title("🏡 Real Estate Price Prediction")
-st.write("Enter the property details below to predict the price:")
+# --- Custom CSS ---
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    
+    html {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+    }
+    
+    .property-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .property-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stButton>button {
+        background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(107, 115, 255, 0.4);
+    }
+    
+    .price-display {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# Collect user inputs
-year_sold = st.number_input("Year Sold", min_value=1900, max_value=2100, value=2011)
-property_tax = st.number_input("Property Tax ($)", min_value=0, value=520)
-insurance = st.number_input("Insurance Cost ($)", min_value=0, value=158)
-beds = st.number_input("Number of Beds", min_value=0, value=4)
-baths = st.number_input("Number of Baths", min_value=0, value=2)
-sqft = st.number_input("Square Footage", min_value=0, value=2300)
-year_built = st.number_input("Year Built", min_value=1800, max_value=2025, value=1970)
-lot_size = st.number_input("Lot Size (sqft)", min_value=0, value=15245)
+# --- App Header ---
+colored_header(
+    label="🏡 LuxeEstimate AI Property Valuator",
+    description="Instant home valuation powered by machine learning",
+    color_name="blue-70"
+)
 
-# ✅ Yes/No Toggles for Binary Inputs
-basement = st.toggle("Does it have a Basement?")
-popular = st.toggle("Is it in a Popular Location?")
-recession = st.toggle("Was it sold during a Recession?")
+# --- Input Section ---
+with st.container():
+    st.subheader("📋 Property Details")
+    
+    with stylable_container(
+        key="property_card",
+        css_styles="""
+            {
+                background: white;
+                border-radius: 15px;
+                padding: 25px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+        """
+    ):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            year_sold = st.slider("Year Sold", 2000, 2025, 2023)
+            property_tax = st.number_input("Annual Property Tax ($)", min_value=0, value=6000, step=500)
+            insurance = st.number_input("Annual Insurance ($)", min_value=0, value=2000, step=100)
+            sqft = st.slider("Square Footage", 500, 10000, 2500, 100, key="soft")
+            
+        with col2:
+            beds = st.selectbox("Bedrooms", [1, 2, 3, 4, 5, 6], index=2)
+            baths = st.select_slider("Bathrooms", [1, 1.5, 2, 2.5, 3, 3.5, 4])
+            year_built = st.slider("Year Built", 1900, 2025, 1990)
+            lot_size = st.number_input("Lot Size (sqft)", min_value=0, value=10000, step=500)
+        
+        st.markdown("---")
+        
+        col3, col4, col5 = st.columns(3)
+        with col3:
+            basement = st.checkbox("Basement", value=True)
+        with col4:
+            popular = st.checkbox("Prime Location", value=True)
+        with col5:
+            recession = st.checkbox("Recession Period", value=False)
+        
+        property_type = st.radio("Property Type", ["Bungalow", "Condo", "Townhouse"], index=0, horizontal=True)
 
-# Convert toggles to binary values
-basement = 1 if basement else 0
-popular = 1 if popular else 0
-recession = 1 if recession else 0
-
-property_type = st.radio("Property Type", ["Bunglow", "Condo"], index=0)
-
-# Convert radio button selection to binary values
-bunglow = 1 if property_type == "Bunglow" else 0
+# --- Prediction Logic ---
+property_age = year_sold - year_built
+bungalow = 1 if property_type == "Bungalow" else 0
 condo = 1 if property_type == "Condo" else 0
+townhouse = 1 if property_type == "Townhouse" else 0
 
-
-
-# features
 features = pd.DataFrame({
     "year_sold": [year_sold],
     "property_tax": [property_tax],
@@ -77,20 +135,55 @@ features = pd.DataFrame({
     "sqft": [sqft],
     "year_built": [year_built],
     "lot_size": [lot_size],
-    "basement": [basement],
-    "popular": [popular],
-    "recession": [recession],
-    "property_age": [year_sold - year_built],  # Adjust column name if needed
-    "property_type_Bunglow": [bunglow],
-    "property_type_Condo": [condo]
+    "basement": [int(basement)],
+    "popular": [int(popular)],
+    "recession": [int(recession)],
+    "property_age": [property_age],
+    "property_type_Bunglow": [bungalow],
+    "property_type_Condo": [condo],
+    "property_type_Townhouse": [townhouse]
 })
 
-# Reorder columns if model expects a specific order
-if hasattr(model, "feature_names_in_"):
-    features = features[model.feature_names_in_]
+# --- Prediction Button ---
+if st.button("✨ Estimate Property Value", use_container_width=True):
+    try:
+        features = features[model.feature_names_in_]
+        prediction = model.predict(features)[0]
+        
+        with stylable_container(
+            key="result_container",
+            css_styles="""
+                {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 25px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    margin-top: 30px;
+                    text-align: center;
+                }
+            """
+        ):
+            st.balloons()
+            st.success("Valuation Complete!")
+            st.markdown(f'<div class="price-display">${prediction:,.2f}</div>', unsafe_allow_html=True)
+            
+            # Market comparison
+            col6, col7, col8 = st.columns(3)
+            with col6:
+                st.metric("Price/SqFt", f"${prediction/sqft:,.2f}")
+            with col7:
+                st.metric("Estimated Equity", f"${prediction*0.8:,.0f}")
+            with col8:
+                st.metric("5Y Appreciation", f"+${prediction*0.15:,.0f}")
+            
+    except Exception as e:
+        st.error(f"Valuation failed: {str(e)}")
 
-# Predict button
-if st.button("🏠 Predict Price"):
-    prediction = model.predict(features)[0]
-    st.success(f"💰 Estimated Price: **${prediction:,.2f}**")
-
+# --- Footer ---
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #666; font-size: 0.9rem;">
+    <p>© 2023 LuxeEstimate AI | <a href="#" style="color: #666;">Terms</a> | <a href="#" style="color: #666;">Privacy</a></p>
+    <p>This estimate is provided for informational purposes only</p>
+</div>
+""", unsafe_allow_html=True)
