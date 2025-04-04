@@ -45,7 +45,7 @@ features = pd.DataFrame({
     "insurance": [insurance],
     "beds": [beds],
     "baths": [baths],
-    "soft": [sqft],  # Using 'soft' as expected by model
+    "sqft": [sqft],  # Using 'soft' as expected by model
     "year_built": [year_built],
     "lot_size": [lot_size],
     "basement": [int(basement)],
