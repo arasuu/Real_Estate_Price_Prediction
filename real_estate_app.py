@@ -13,7 +13,7 @@ model = load_model()
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="🏡 LuxeEstimate | AI Property Valuator",
+    page_title="🏡 AI Property Valuator",
     page_icon="🏡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -74,7 +74,7 @@ st.markdown("""
 
 # --- App Header ---
 colored_header(
-    label="🏡 LuxeEstimate AI Property Valuator",
+    label="🏡 AI Property Valuator",
     description="Instant home valuation powered by machine learning",
     color_name="blue-70"
 )
@@ -118,13 +118,12 @@ with st.container():
         with col5:
             recession = st.checkbox("Recession Period", value=False)
         
-        property_type = st.radio("Property Type", ["Bungalow", "Condo", "Townhouse"], index=0, horizontal=True)
+        property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0, horizontal=True)
 
 # --- Prediction Logic ---
 property_age = year_sold - year_built
 bungalow = 1 if property_type == "Bungalow" else 0
 condo = 1 if property_type == "Condo" else 0
-townhouse = 1 if property_type == "Townhouse" else 0
 
 features = pd.DataFrame({
     "year_sold": [year_sold],
@@ -141,7 +140,6 @@ features = pd.DataFrame({
     "property_age": [property_age],
     "property_type_Bunglow": [bungalow],
     "property_type_Condo": [condo],
-    "property_type_Townhouse": [townhouse]
 })
 
 # --- Prediction Button ---
@@ -171,11 +169,7 @@ if st.button("✨ Estimate Property Value", use_container_width=True):
             col6, col7, col8 = st.columns(3)
             with col6:
                 st.metric("Price/SqFt", f"${prediction/sqft:,.2f}")
-            with col7:
-                st.metric("Estimated Equity", f"${prediction*0.8:,.0f}")
-            with col8:
-                st.metric("5Y Appreciation", f"+${prediction*0.15:,.0f}")
-            
+                       
     except Exception as e:
         st.error(f"Valuation failed: {str(e)}")
 
@@ -183,7 +177,7 @@ if st.button("✨ Estimate Property Value", use_container_width=True):
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.9rem;">
-    <p>© 2023 LuxeEstimate AI | <a href="#" style="color: #666;">Terms</a> | <a href="#" style="color: #666;">Privacy</a></p>
+    <p>© 2025 AI Property Valuator | <a href="#" style="color: #666;">Terms</a> | <a href="#" style="color: #666;">Privacy</a></p>
     <p>This estimate is provided for informational purposes only</p>
 </div>
 """, unsafe_allow_html=True)
