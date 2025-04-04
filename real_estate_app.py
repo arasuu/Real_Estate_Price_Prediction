@@ -71,9 +71,7 @@ if hasattr(model, "feature_names_in_"):
 st.write("Model expects:", model.feature_names_in_)
 st.write("Your features:", features.columns.tolist())
 
-# Reorder columns if model expects a specific order
-if hasattr(model, "feature_names_in_"):
-    features = features[model.feature_names_in_]
+
 
 # Replace your features array with this:
 features = pd.DataFrame({
@@ -93,7 +91,9 @@ features = pd.DataFrame({
     "property_type_Condo": [condo]
 })
 
-
+# Reorder columns if model expects a specific order
+if hasattr(model, "feature_names_in_"):
+    features = features[model.feature_names_in_]
 
 # Predict button
 if st.button("🏠 Predict Price"):
