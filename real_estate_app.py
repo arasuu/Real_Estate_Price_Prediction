@@ -59,8 +59,14 @@ condo = st.toggle("Is it a Condo?")
 basement = 1 if basement else 0
 popular = 1 if popular else 0
 recession = 1 if recession else 0
-bungalow = 1 if bungalow else 0
-condo = 1 if condo else 0
+#bungalow = 1 if bungalow else 0
+#condo = 1 if condo else 0
+
+property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
+
+# Convert radio button selection to binary values
+bungalow = 1 if property_type == "Bungalow" else 0
+condo = 1 if property_type == "Condo" else 0
 
 # Convert inputs into a numpy array for model prediction
 features = np.array([[year_sold, property_tax, insurance, beds, baths, sqft, year_built, lot_size, basement, popular, recession, year_sold - year_built, bungalow, condo]])
