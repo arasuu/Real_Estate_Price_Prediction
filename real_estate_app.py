@@ -65,6 +65,10 @@ property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 bungalow = 1 if property_type == "Bungalow" else 0
 condo = 1 if property_type == "Condo" else 0
 
+# Reorder columns if model expects a specific order
+if hasattr(model, "feature_names_in_"):
+    features = features[model.feature_names_in_]
+
 # Replace your features array with this:
 features = pd.DataFrame({
     "year_sold": [year_sold],
@@ -83,9 +87,6 @@ features = pd.DataFrame({
     "condo": [condo]
 })
 
-# Reorder columns if model expects a specific order
-if hasattr(model, "feature_names_in_"):
-    features = features[model.feature_names_in_]
 
 
 # Predict button
