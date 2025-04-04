@@ -65,6 +65,9 @@ property_type = st.radio("Property Type", ["Bungalow", "Condo"], index=0)
 bungalow = 1 if property_type == "Bungalow" else 0
 condo = 1 if property_type == "Condo" else 0
 
+if hasattr(model, "feature_names_in_"):
+        st.write("Model was trained with these features:", model.feature_names_in_)
+
 # Reorder columns if model expects a specific order
 if hasattr(model, "feature_names_in_"):
     features = features[model.feature_names_in_]
