@@ -85,9 +85,9 @@ features = pd.DataFrame({
     "basement": [basement],
     "popular": [popular],
     "recession": [recession],
-    "age_when_sold": [year_sold - year_built],  # Adjust column name if needed
-    "bungalow": [bungalow],
-    "condo": [condo]
+    "property_age": [year_sold - year_built],  # Adjust column name if needed
+    "property_type_bungalow": [bungalow],
+    "property_type_condo": [condo]
 })
 
 
