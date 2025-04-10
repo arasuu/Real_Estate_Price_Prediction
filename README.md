@@ -27,3 +27,5 @@ Thanks to all contributors and dataset providers. This is a learning project for
 
 
 Streamlit App - https://realestatepriceprediction-gzg9bcnaksaydwnfgvj5xu.streamlit.app/
+
+🔗 Author: Arasu Ragupathi 📧 Contact: arasuragu23@gmail.com 🌟 GitHub: https://github.com/arasuu
